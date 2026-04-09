@@ -23,7 +23,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 
 //#if MC >= 12000
 //$$ import net.minecraft.client.gui.GuiGraphics;
-//#elseif MC >= 11700
+//#elseif MC >= 11600
 //$$ import com.mojang.blaze3d.vertex.PoseStack;
 //#endif
 
@@ -117,7 +117,7 @@ public class EASConfigScreen extends Screen
 	//$$ 	g.drawCenteredString(this.font, "\u00a77v" + EssentialAutoSprint.MOD_VERSION + " \u00a78by \u00a76GBX Team", this.width / 2, py + 16, 0xFFFFFF);
 	//$$ 	super.render(g, mx, my, delta);
 	//$$ }
-	//#elseif MC >= 11700
+	//#elseif MC >= 11600
 	//$$ @Override
 	//$$ public void render(PoseStack pose, int mx, int my, float delta)
 	//$$ {
