@@ -30,7 +30,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-//#if MC >= 1.19.0
+//#if MC >= 11900
 //$$ import net.minecraft.network.chat.Component;
 //#else
 import net.minecraft.network.chat.TextComponent;
@@ -77,11 +77,11 @@ public abstract class MinecraftClientMixin
 					? "\u00a7aAuto Sprint: ON"
 					: "\u00a7cAuto Sprint: OFF";
 
-			//#if MC >= 1.19.0
+			//#if MC >= 11900
 			//$$ mc.player.displayClientMessage(Component.literal(msgText), true);
-			//#elseif MC >= 1.17.0
+			//#elseif MC >= 11700
 			//$$ mc.player.displayClientMessage(new TextComponent(msgText), true);
-			//#elseif MC >= 1.16.0
+			//#elseif MC >= 11600
 			mc.player.displayClientMessage(new TextComponent(msgText), true);
 			//#else
 			//$$ // 1.14-1.15: action bar API unavailable, skip overlay notification

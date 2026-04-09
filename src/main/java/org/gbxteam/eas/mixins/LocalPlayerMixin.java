@@ -45,13 +45,19 @@ public abstract class LocalPlayerMixin
 		if (!EASConfig.INSTANCE.enabled) return;
 		if (self.isSpectator()) return;
 
-		//#if MC >= 1.16.0
+		//#if MC >= 11600
 		boolean movingForward = self.input.forwardImpulse > 0.0F;
 		//#else
 		//$$ boolean movingForward = self.input.up;
 		//#endif
 
-		if (movingForward && !self.abilities.flying)
+		//#if MC >= 11700
+		//$$ boolean flying = self.getAbilities().flying;
+		//#else
+		boolean flying = self.abilities.flying;
+		//#endif
+
+		if (movingForward && !flying)
 		{
 			self.setSprinting(true);
 		}
