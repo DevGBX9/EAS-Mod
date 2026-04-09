@@ -14,37 +14,30 @@ import org.gbxteam.eas.EASConfig;
 import org.gbxteam.eas.EssentialAutoSprint;
 import org.lwjgl.glfw.GLFW;
 
-//#if MC >= 1.19.0
+//#if MC >= 11900
 //$$ import net.minecraft.network.chat.Component;
 //#else
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 //#endif
 
-//#if MC >= 1.20.0
+//#if MC >= 12000
 //$$ import net.minecraft.client.gui.GuiGraphics;
-//#elseif MC >= 1.17.0
+//#elseif MC >= 11700
 //$$ import com.mojang.blaze3d.vertex.PoseStack;
 //#endif
 
 import net.minecraft.client.gui.components.Button;
 
-/**
- * In-game configuration screen for Essential Auto Sprint.
- * Accessible via Mod Menu. Handles toggle, keybind capture, and website link.
- */
 @Environment(EnvType.CLIENT)
 public class EASConfigScreen extends Screen
 {
 	private final Screen parent;
-	// true while we are waiting for the player to press a new toggle key
 	boolean waitingForKey = false;
-
-	// ─── Constructor ──────────────────────────────────────────────────────────
 
 	public EASConfigScreen(Screen parent)
 	{
-		//#if MC >= 1.19.0
+		//#if MC >= 11900
 		//$$ super(Component.translatable("eas.config.title"));
 		//#else
 		super(new TranslatableComponent("eas.config.title"));
@@ -52,77 +45,46 @@ public class EASConfigScreen extends Screen
 		this.parent = parent;
 	}
 
-	// ─── Helpers ──────────────────────────────────────────────────────────────
-
 	private String getToggleLabel()
 	{
-		return EASConfig.INSTANCE.enabled ? "§a● Auto Sprint: ON" : "§c○ Auto Sprint: OFF";
+		return EASConfig.INSTANCE.enabled ? "\u00a7a\u25cf Auto Sprint: ON" : "\u00a7c\u25cb Auto Sprint: OFF";
 	}
 
 	private String getKeybindLabel()
 	{
-		return "Toggle Key: §e" + GLFW.glfwGetKeyName(EASConfig.INSTANCE.toggleKey, 0);
+		return "Toggle Key: \u00a7e" + GLFW.glfwGetKeyName(EASConfig.INSTANCE.toggleKey, 0);
 	}
-
-	private net.minecraft.network.chat.Component makeText(String s)
-	{
-		//#if MC >= 1.19.0
-		//$$ return Component.literal(s);
-		//#else
-		return new TextComponent(s);
-		//#endif
-	}
-
-	// ─── Init ─────────────────────────────────────────────────────────────────
 
 	@Override
 	protected void init()
 	{
 		super.init();
-
 		int panelW = Math.min(320, this.width - 40);
 		int panelX = (this.width - panelW) / 2;
-		int startY = this.height / 2 - 70;
+		int startY = this.height / 2 - 60;
 
-		// Toggle button — reopens screen so label always reflects current state
 		addEASButton(panelX, startY, panelW, 20, getToggleLabel(), button -> {
 			EASConfig.INSTANCE.enabled = !EASConfig.INSTANCE.enabled;
 			EASConfig.INSTANCE.save();
 			if (!EASConfig.INSTANCE.enabled && this.minecraft != null && this.minecraft.player != null)
-			{
 				this.minecraft.player.setSprinting(false);
-			}
 			this.minecraft.setScreen(new EASConfigScreen(this.parent));
 		});
 
-		// Keybind button — activates waiting state on click
-		String keybindLabel = waitingForKey
-				? "\u00a7ePress any key\u2026 (ESC to cancel)"
-				: getKeybindLabel();
-
+		String keybindLabel = waitingForKey ? "\u00a7ePress any key... (ESC to cancel)" : getKeybindLabel();
 		addEASButton(panelX, startY + 28, panelW, 20, keybindLabel, button -> {
 			EASConfigScreen next = new EASConfigScreen(this.parent);
 			next.waitingForKey = true;
 			this.minecraft.setScreen(next);
 		});
 
-		// Website button
-		addEASButton(panelX, startY + 60, panelW, 20, "\uD83C\uDF10  View on Modrinth", button -> {
-			try
-			{
-				java.awt.Desktop.getDesktop().browse(
-						java.net.URI.create("https://modrinth.com/mod/essential-auto-sprint-(eas)")
-				);
-			}
+		addEASButton(panelX, startY + 60, panelW, 20, "\u25b6  View on Modrinth", button -> {
+			try { java.awt.Desktop.getDesktop().browse(java.net.URI.create("https://modrinth.com/mod/essential-auto-sprint-(eas)")); }
 			catch (Exception ignored) {}
 		});
 
-		// Done button
-		addEASButton(panelX, startY + 100, panelW, 20, "Done", button ->
-				this.minecraft.setScreen(this.parent));
+		addEASButton(panelX, startY + 88, panelW, 20, "Done", button -> this.minecraft.setScreen(this.parent));
 	}
-
-	// ─── Key handling ─────────────────────────────────────────────────────────
 
 	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers)
@@ -134,87 +96,66 @@ public class EASConfigScreen extends Screen
 				EASConfig.INSTANCE.toggleKey = keyCode;
 				EASConfig.INSTANCE.save();
 			}
-			// Reopen in normal state
 			this.minecraft.setScreen(new EASConfigScreen(this.parent));
 			return true;
 		}
 		return super.keyPressed(keyCode, scanCode, modifiers);
 	}
 
-	// ─── Rendering ────────────────────────────────────────────────────────────
+	// ─── Render ───────────────────────────────────────────────────────────────
 
-	//#if MC >= 1.20.0
+	//#if MC >= 12000
 	//$$ @Override
-	//$$ public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta)
+	//$$ public void render(GuiGraphics g, int mx, int my, float delta)
 	//$$ {
-	//$$ 	this.renderBackground(graphics);
-	//$$
-	//$$ 	int panelW = Math.min(320, this.width - 40);
-	//$$ 	int panelX = (this.width - panelW) / 2;
-	//$$ 	int panelH = 160;
-	//$$ 	int panelY = this.height / 2 - 85;
-	//$$
-	//$$ 	// Panel background
-	//$$ 	graphics.fill(panelX - 8, panelY - 8, panelX + panelW + 8, panelY + panelH + 8, 0xCC000000);
-	//$$ 	graphics.fill(panelX - 6, panelY - 6, panelX + panelW + 6, panelY + panelH + 6, 0xFF1A1A2E);
-	//$$
-	//$$ 	// Title
-	//$$ 	graphics.drawCenteredString(this.font, "§bEssential Auto Sprint", this.width / 2, panelY + 4, 0xFFFFFF);
-	//$$ 	graphics.drawCenteredString(this.font, "§7v" + EssentialAutoSprint.MOD_VERSION + " §8by §6GBX Team", this.width / 2, panelY + 16, 0xAAAAAA);
-	//$$
-	//$$ 	super.render(graphics, mouseX, mouseY, delta);
+	//$$ 	renderBackground(g);
+	//$$ 	int pw = Math.min(320, this.width - 40);
+	//$$ 	int px = (this.width - pw) / 2;
+	//$$ 	int py = this.height / 2 - 75;
+	//$$ 	g.fill(px - 8, py - 8, px + pw + 8, py + 145 + 8, 0xCC111122);
+	//$$ 	g.drawCenteredString(this.font, "\u00a7bEssential Auto Sprint", this.width / 2, py + 4, 0xFFFFFF);
+	//$$ 	g.drawCenteredString(this.font, "\u00a77v" + EssentialAutoSprint.MOD_VERSION + " \u00a78by \u00a76GBX Team", this.width / 2, py + 16, 0xFFFFFF);
+	//$$ 	super.render(g, mx, my, delta);
 	//$$ }
-	//#elseif MC >= 1.17.0
+	//#elseif MC >= 11700
 	//$$ @Override
-	//$$ public void render(PoseStack pose, int mouseX, int mouseY, float delta)
+	//$$ public void render(PoseStack pose, int mx, int my, float delta)
 	//$$ {
-	//$$ 	this.renderBackground(pose);
-	//$$
-	//$$ 	int panelW = Math.min(320, this.width - 40);
-	//$$ 	int panelX = (this.width - panelW) / 2;
-	//$$ 	int panelH = 160;
-	//$$ 	int panelY = this.height / 2 - 85;
-	//$$
-	//$$ 	fill(pose, panelX - 8, panelY - 8, panelX + panelW + 8, panelY + panelH + 8, 0xCC000000);
-	//$$ 	fill(pose, panelX - 6, panelY - 6, panelX + panelW + 6, panelY + panelH + 6, 0xFF1A1A2E);
-	//$$
-	//$$ 	drawCenteredString(pose, this.font, "§bEssential Auto Sprint", this.width / 2, panelY + 4, 0xFFFFFF);
-	//$$ 	drawCenteredString(pose, this.font, "§7v" + EssentialAutoSprint.MOD_VERSION + " §8by §6GBX Team", this.width / 2, panelY + 16, 0xAAAAAA);
-	//$$
-	//$$ 	super.render(pose, mouseX, mouseY, delta);
+	//$$ 	renderBackground(pose);
+	//$$ 	int pw = Math.min(320, this.width - 40);
+	//$$ 	int px = (this.width - pw) / 2;
+	//$$ 	int py = this.height / 2 - 75;
+	//$$ 	fill(pose, px - 8, py - 8, px + pw + 8, py + 153, 0xCC111122);
+	//$$ 	drawCenteredString(pose, this.font, "\u00a7bEssential Auto Sprint", this.width / 2, py + 4, 0xFFFFFF);
+	//$$ 	drawCenteredString(pose, this.font, "\u00a77v" + EssentialAutoSprint.MOD_VERSION + " \u00a78by \u00a76GBX Team", this.width / 2, py + 16, 0xFFFFFF);
+	//$$ 	super.render(pose, mx, my, delta);
 	//$$ }
 	//#else
 	@Override
-	public void render(int mouseX, int mouseY, float delta)
+	public void render(int mx, int my, float delta)
 	{
-		this.renderBackground();
-
-		int panelW = Math.min(320, this.width - 40);
-		int panelX = (this.width - panelW) / 2;
-		int panelH = 160;
-		int panelY = this.height / 2 - 85;
-
-		fill(panelX - 8, panelY - 8, panelX + panelW + 8, panelY + panelH + 8, 0xCC000000);
-		fill(panelX - 6, panelY - 6, panelX + panelW + 6, panelY + panelH + 6, 0xFF1A1A2E);
-
-		drawCenteredString(this.font, "§bEssential Auto Sprint", this.width / 2, panelY + 4, 0xFFFFFF);
-		drawCenteredString(this.font, "§7v" + EssentialAutoSprint.MOD_VERSION + " §8by §6GBX Team", this.width / 2, panelY + 16, 0xAAAAAA);
-
-		super.render(mouseX, mouseY, delta);
+		renderBackground();
+		int pw = Math.min(320, this.width - 40);
+		int px = (this.width - pw) / 2;
+		int py = this.height / 2 - 75;
+		fill(px - 8, py - 8, px + pw + 8, py + 153, 0xCC111122);
+		drawCenteredString(this.font, "\u00a7bEssential Auto Sprint", this.width / 2, py + 4, 0xFFFFFF);
+		drawCenteredString(this.font, "\u00a77v" + EssentialAutoSprint.MOD_VERSION + " \u00a78by \u00a76GBX Team", this.width / 2, py + 16, 0xFFFFFF);
+		super.render(mx, my, delta);
 	}
 	//#endif
 
-	// ─── Versioned button helper ───────────────────────────────────────────────
+	// ─── Button helper — handles all MC versions ──────────────────────────────
 
 	private void addEASButton(int x, int y, int w, int h, String label, Button.OnPress action)
 	{
-		//#if MC >= 1.20.0
+		//#if MC >= 12000
 		//$$ this.addRenderableWidget(Button.builder(Component.literal(label), action).bounds(x, y, w, h).build());
-		//#elseif MC >= 1.19.0
+		//#elseif MC >= 11900
 		//$$ this.addRenderableWidget(new Button(x, y, w, h, Component.literal(label), action));
-		//#elseif MC >= 1.17.0
+		//#elseif MC >= 11700
 		//$$ this.addRenderableWidget(new Button(x, y, w, h, new TextComponent(label), action));
-		//#elseif MC >= 1.16.0
+		//#elseif MC >= 11600
 		this.addWidget(new Button(x, y, w, h, new TextComponent(label), action));
 		//#else
 		//$$ this.addButton(new Button(x, y, w, h, label, action));

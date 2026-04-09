@@ -53,7 +53,7 @@ public abstract class MinecraftClientMixin
 		if (mc.player == null || mc.screen != null) return;
 
 		// --- Toggle keybind detection ---
-		//#if MC >= 1.15.0
+		//#if MC >= 11500
 		long windowHandle = mc.getWindow().getWindow();
 		//#else
 		//$$ long windowHandle = mc.window.getWindow();
