@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "id": "${id}",
+  "version": "${version}",
+
+  "name": "${name}",
+  "description": "Automatically sprints when moving forward. No Ctrl, no double-tap — just pure speed.",
+  "authors": [
+    {
+      "name": "GBX Team",
+      "contact": {
+        "homepage": "https://modrinth.com/mod/essential-auto-sprint-(eas)"
+      }
+    },
+    {
+      "name": "DevGBX9"
+    }
+  ],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/essential-auto-sprint-(eas)",
+    "sources": "https://github.com/DevGBX9/EAS-Mod",
+    "issues": "https://github.com/DevGBX9/EAS-Mod/issues"
+  },
+  "license": "LGPL-3.0",
+
+  "icon": "icon.png",
+
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "org.gbxteam.eas.EssentialAutoSprint"
+    ],
+    "client": [
+      "org.gbxteam.eas.EssentialAutoSprintClient"
+    ],
+    "modmenu": [
+      "org.gbxteam.eas.modmenu.EASModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "eas.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.11.4",
+    "minecraft": "${minecraft_dependency}"
+  },
+  "suggests": {
+    "modmenu": "*"
+  }
+}
