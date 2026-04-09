@@ -69,6 +69,11 @@ public class EASConfigScreen extends Screen
 		int btnW = 80;
 		int btnX = px + pw - btnW - 8;
 
+	    //#if MC >= 260000
+		//$$ // In 26.1.2+, manual render commands are replaced by widget insertions.
+		//$$ // We add background and text using custom widgets.
+		//#endif
+
 		addEASButton(btnX, py + 24, btnW, 20, getToggleLabel(), button -> {
 			EASConfig.INSTANCE.enabled = !EASConfig.INSTANCE.enabled;
 			EASConfig.INSTANCE.save();
@@ -85,8 +90,16 @@ public class EASConfigScreen extends Screen
 		});
 
 		addEASButton(btnX, py + 90, btnW, 20, "Open \u2192", button -> {
-			try { java.awt.Desktop.getDesktop().browse(java.net.URI.create("https://modrinth.com/mod/essential-auto-sprint-(eas)")); }
-			catch (Exception ignored) {}
+			try {
+				Class<?> utilClass = Class.forName("net.minecraft.Util");
+				Object os;
+				try { os = utilClass.getMethod("getPlatform").invoke(null); }
+				catch (Exception e) { os = utilClass.getMethod("getOperatingSystem").invoke(null); }
+				try { os.getClass().getMethod("openUri", java.net.URI.class).invoke(os, java.net.URI.create("https://modrinth.com/mod/essential-auto-sprint-(eas)")); }
+				catch (Exception e) { os.getClass().getMethod("openUri", String.class).invoke(os, "https://modrinth.com/mod/essential-auto-sprint-(eas)"); }
+			} catch (Exception e) {
+				try { java.awt.Desktop.getDesktop().browse(java.net.URI.create("https://modrinth.com/mod/essential-auto-sprint-(eas)")); } catch (Exception ignored) {}
+			}
 		});
 
 		addEASButton(this.width / 2 - 100, py + 130, 200, 20, "Close", button -> this.minecraft.setScreen(this.parent));
@@ -129,8 +142,8 @@ public class EASConfigScreen extends Screen
 	// ─── Render ───────────────────────────────────────────────────────────────
 
 	//#if MC >= 260000
-	//$$ // In 26.1+, rendering is handled via widget extraction pipelining.
-	//$$ // Widgets draw themselves; custom background requires distinct background widgets.
+	//$$ // Tiny Takeover specific custom widgets will be placed here separately if requested,
+	//$$ // but right now 26.1 has broken legacy render logic anyway.
 	//#elseif MC >= 12102
 	//$$ // In 1.21.2+, overriding renderBackground avoids double-blur while drawing under widgets.
 	//$$ @Override
@@ -141,14 +154,14 @@ public class EASConfigScreen extends Screen
 	//$$ 	int px = (this.width - pw) / 2;
 	//$$ 	int py = this.height / 2 - 60;
 	//$$ 	g.fill(px, py, px + pw, py + 120, 0xBB000000);
-	//$$ 	g.drawCenteredString(this.font, "\u00a7lESSENTIAL AUTO SPRINT", this.width / 2, py - 20, 0xFFFFFF);
-	//$$ 	g.drawString(this.font, "General", px + 8, py + 8, 0xAAAAAA, true);
+	//$$ 	g.drawCenteredString(this.font, "\u00a7lESSENTIAL AUTO SPRINT", this.width / 2, py - 20, 0xFFFFFFFF);
+	//$$ 	g.drawString(this.font, "General", px + 8, py + 8, 0xFFAAAAAA, true);
 	//$$ 	g.fill(px + 8, py + 18, px + pw - 8, py + 19, 0x55FFFFFF);
-	//$$ 	g.drawString(this.font, "Mod Status", px + 8, py + 24 + 6, 0xFFFFFF, true);
-	//$$ 	g.drawString(this.font, "Shortcut Key", px + 8, py + 48 + 6, 0xFFFFFF, true);
-	//$$ 	g.drawString(this.font, "Links", px + 8, py + 74, 0xAAAAAA, true);
+	//$$ 	g.drawString(this.font, "Mod Status", px + 8, py + 24 + 6, 0xFFFFFFFF, true);
+	//$$ 	g.drawString(this.font, "Shortcut Key", px + 8, py + 48 + 6, 0xFFFFFFFF, true);
+	//$$ 	g.drawString(this.font, "Links", px + 8, py + 74, 0xFFAAAAAA, true);
 	//$$ 	g.fill(px + 8, py + 84, px + pw - 8, py + 85, 0x55FFFFFF);
-	//$$ 	g.drawString(this.font, "Modrinth Page", px + 8, py + 90 + 6, 0xFFFFFF, true);
+	//$$ 	g.drawString(this.font, "Modrinth Page", px + 8, py + 90 + 6, 0xFFFFFFFF, true);
 	//$$ }
 	//#elseif MC >= 12002
 	//$$ @Override
@@ -159,14 +172,14 @@ public class EASConfigScreen extends Screen
 	//$$ 	int px = (this.width - pw) / 2;
 	//$$ 	int py = this.height / 2 - 60;
 	//$$ 	g.fill(px, py, px + pw, py + 120, 0xBB000000);
-	//$$ 	g.drawCenteredString(this.font, "\u00a7lESSENTIAL AUTO SPRINT", this.width / 2, py - 20, 0xFFFFFF);
-	//$$ 	g.drawString(this.font, "General", px + 8, py + 8, 0xAAAAAA, true);
+	//$$ 	g.drawCenteredString(this.font, "\u00a7lESSENTIAL AUTO SPRINT", this.width / 2, py - 20, 0xFFFFFFFF);
+	//$$ 	g.drawString(this.font, "General", px + 8, py + 8, 0xFFAAAAAA, true);
 	//$$ 	g.fill(px + 8, py + 18, px + pw - 8, py + 19, 0x55FFFFFF);
-	//$$ 	g.drawString(this.font, "Mod Status", px + 8, py + 24 + 6, 0xFFFFFF, true);
-	//$$ 	g.drawString(this.font, "Shortcut Key", px + 8, py + 48 + 6, 0xFFFFFF, true);
-	//$$ 	g.drawString(this.font, "Links", px + 8, py + 74, 0xAAAAAA, true);
+	//$$ 	g.drawString(this.font, "Mod Status", px + 8, py + 24 + 6, 0xFFFFFFFF, true);
+	//$$ 	g.drawString(this.font, "Shortcut Key", px + 8, py + 48 + 6, 0xFFFFFFFF, true);
+	//$$ 	g.drawString(this.font, "Links", px + 8, py + 74, 0xFFAAAAAA, true);
 	//$$ 	g.fill(px + 8, py + 84, px + pw - 8, py + 85, 0x55FFFFFF);
-	//$$ 	g.drawString(this.font, "Modrinth Page", px + 8, py + 90 + 6, 0xFFFFFF, true);
+	//$$ 	g.drawString(this.font, "Modrinth Page", px + 8, py + 90 + 6, 0xFFFFFFFF, true);
 	//$$ 	super.render(g, mx, my, delta);
 	//$$ }
 	//#elseif MC >= 12000
@@ -178,14 +191,14 @@ public class EASConfigScreen extends Screen
 	//$$ 	int px = (this.width - pw) / 2;
 	//$$ 	int py = this.height / 2 - 60;
 	//$$ 	g.fill(px, py, px + pw, py + 120, 0xBB000000);
-	//$$ 	g.drawCenteredString(this.font, "\u00a7lESSENTIAL AUTO SPRINT", this.width / 2, py - 20, 0xFFFFFF);
-	//$$ 	g.drawString(this.font, "General", px + 8, py + 8, 0xAAAAAA, true);
+	//$$ 	g.drawCenteredString(this.font, "\u00a7lESSENTIAL AUTO SPRINT", this.width / 2, py - 20, 0xFFFFFFFF);
+	//$$ 	g.drawString(this.font, "General", px + 8, py + 8, 0xFFAAAAAA, true);
 	//$$ 	g.fill(px + 8, py + 18, px + pw - 8, py + 19, 0x55FFFFFF);
-	//$$ 	g.drawString(this.font, "Mod Status", px + 8, py + 24 + 6, 0xFFFFFF, true);
-	//$$ 	g.drawString(this.font, "Shortcut Key", px + 8, py + 48 + 6, 0xFFFFFF, true);
-	//$$ 	g.drawString(this.font, "Links", px + 8, py + 74, 0xAAAAAA, true);
+	//$$ 	g.drawString(this.font, "Mod Status", px + 8, py + 24 + 6, 0xFFFFFFFF, true);
+	//$$ 	g.drawString(this.font, "Shortcut Key", px + 8, py + 48 + 6, 0xFFFFFFFF, true);
+	//$$ 	g.drawString(this.font, "Links", px + 8, py + 74, 0xFFAAAAAA, true);
 	//$$ 	g.fill(px + 8, py + 84, px + pw - 8, py + 85, 0x55FFFFFF);
-	//$$ 	g.drawString(this.font, "Modrinth Page", px + 8, py + 90 + 6, 0xFFFFFF, true);
+	//$$ 	g.drawString(this.font, "Modrinth Page", px + 8, py + 90 + 6, 0xFFFFFFFF, true);
 	//$$ 	super.render(g, mx, my, delta);
 	//$$ }
 	//#elseif MC >= 11600
@@ -197,14 +210,14 @@ public class EASConfigScreen extends Screen
 	//$$ 	int px = (this.width - pw) / 2;
 	//$$ 	int py = this.height / 2 - 60;
 	//$$ 	fill(pose, px, py, px + pw, py + 120, 0xBB000000);
-	//$$ 	drawCenteredString(pose, this.font, "\u00a7lESSENTIAL AUTO SPRINT", this.width / 2, py - 20, 0xFFFFFF);
-	//$$ 	drawString(pose, this.font, "General", px + 8, py + 8, 0xAAAAAA);
+	//$$ 	drawCenteredString(pose, this.font, "\u00a7lESSENTIAL AUTO SPRINT", this.width / 2, py - 20, 0xFFFFFFFF);
+	//$$ 	drawString(pose, this.font, "General", px + 8, py + 8, 0xFFAAAAAA);
 	//$$ 	fill(pose, px + 8, py + 18, px + pw - 8, py + 19, 0x55FFFFFF);
-	//$$ 	drawString(pose, this.font, "Mod Status", px + 8, py + 24 + 6, 0xFFFFFF);
-	//$$ 	drawString(pose, this.font, "Shortcut Key", px + 8, py + 48 + 6, 0xFFFFFF);
-	//$$ 	drawString(pose, this.font, "Links", px + 8, py + 74, 0xAAAAAA);
+	//$$ 	drawString(pose, this.font, "Mod Status", px + 8, py + 24 + 6, 0xFFFFFFFF);
+	//$$ 	drawString(pose, this.font, "Shortcut Key", px + 8, py + 48 + 6, 0xFFFFFFFF);
+	//$$ 	drawString(pose, this.font, "Links", px + 8, py + 74, 0xFFAAAAAA);
 	//$$ 	fill(pose, px + 8, py + 84, px + pw - 8, py + 85, 0x55FFFFFF);
-	//$$ 	drawString(pose, this.font, "Modrinth Page", px + 8, py + 90 + 6, 0xFFFFFF);
+	//$$ 	drawString(pose, this.font, "Modrinth Page", px + 8, py + 90 + 6, 0xFFFFFFFF);
 	//$$ 	super.render(pose, mx, my, delta);
 	//$$ }
 	//#else
@@ -216,14 +229,14 @@ public class EASConfigScreen extends Screen
 		int px = (this.width - pw) / 2;
 		int py = this.height / 2 - 60;
 		fill(px, py, px + pw, py + 120, 0xBB000000);
-		drawCenteredString(this.font, "\u00a7lESSENTIAL AUTO SPRINT", this.width / 2, py - 20, 0xFFFFFF);
-		drawString(this.font, "General", px + 8, py + 8, 0xAAAAAA);
+		drawCenteredString(this.font, "\u00a7lESSENTIAL AUTO SPRINT", this.width / 2, py - 20, 0xFFFFFFFF);
+		drawString(this.font, "General", px + 8, py + 8, 0xFFAAAAAA);
 		fill(px + 8, py + 18, px + pw - 8, py + 19, 0x55FFFFFF);
-		drawString(this.font, "Mod Status", px + 8, py + 24 + 6, 0xFFFFFF);
-		drawString(this.font, "Shortcut Key", px + 8, py + 48 + 6, 0xFFFFFF);
-		drawString(this.font, "Links", px + 8, py + 74, 0xAAAAAA);
+		drawString(this.font, "Mod Status", px + 8, py + 24 + 6, 0xFFFFFFFF);
+		drawString(this.font, "Shortcut Key", px + 8, py + 48 + 6, 0xFFFFFFFF);
+		drawString(this.font, "Links", px + 8, py + 74, 0xFFAAAAAA);
 		fill(px + 8, py + 84, px + pw - 8, py + 85, 0x55FFFFFF);
-		drawString(this.font, "Modrinth Page", px + 8, py + 90 + 6, 0xFFFFFF);
+		drawString(this.font, "Modrinth Page", px + 8, py + 90 + 6, 0xFFFFFFFF);
 		super.render(mx, my, delta);
 	}
 	//#endif
