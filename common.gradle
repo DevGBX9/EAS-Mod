@@ -26,6 +26,12 @@ repositories {
 		url = 'https://maven.terraformersmc.com/releases'
 		content { includeGroup('com.terraformersmc') }
 	}
+	// Patbox Maven — provides eu.pb4:placeholder-api (transitive dep of ModMenu 9+)
+	maven {
+		name = 'Patbox'
+		url = 'https://maven.pb4.eu/releases'
+		content { includeGroup('eu.pb4') }
+	}
 }
 
 dependencies {
