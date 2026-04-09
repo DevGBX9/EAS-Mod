@@ -54,9 +54,9 @@ dependencies {
 	}
 	autoImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	// ModMenu integration — compile-only (API only), excluded for 26.x+
+	// ModMenu integration — compile-only (API only)
 	// transitive = false: we only need the ModMenuApi interface, not its runtime deps (placeholder-api etc.)
-	if (mcVersion < 26_00_00 && project.hasProperty('modmenu_version') && project.modmenu_version.trim() != '') {
+	if (project.hasProperty('modmenu_version') && project.modmenu_version.trim() != '') {
 		def mmNotation = "com.terraformersmc:modmenu:${project.modmenu_version}"
 		if (unobfuscated) {
 			compileOnly(mmNotation) { transitive = false }

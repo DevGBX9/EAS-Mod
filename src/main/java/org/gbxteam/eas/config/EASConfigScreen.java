@@ -126,7 +126,22 @@ public class EASConfigScreen extends Screen
 
 	//#if MC >= 260000
 	//$$ // In 26.1+, rendering is handled via widget extraction pipelining.
-	//$$ // Custom background rendering requires creating specific widgets now.
+	//$$ // Widgets draw themselves; no manual render() override needed.
+	//#elseif MC >= 12102
+	//$$ // In 1.21.2+, Screen.render() already calls renderBackground internally (blur).
+	//$$ // Calling renderBackground ourselves would cause "Can only blur once per frame" crash.
+	//$$ // We call super.render() first to handle background+blur, then draw our overlay on top.
+	//$$ @Override
+	//$$ public void render(GuiGraphics g, int mx, int my, float delta)
+	//$$ {
+	//$$ 	super.render(g, mx, my, delta);
+	//$$ 	int pw = Math.min(320, this.width - 40);
+	//$$ 	int px = (this.width - pw) / 2;
+	//$$ 	int py = this.height / 2 - 75;
+	//$$ 	g.fill(px - 8, py - 8, px + pw + 8, py + 145 + 8, 0xCC111122);
+	//$$ 	g.drawCenteredString(this.font, "\u00a7bEssential Auto Sprint", this.width / 2, py + 4, 0xFFFFFF);
+	//$$ 	g.drawCenteredString(this.font, "\u00a77v" + EssentialAutoSprint.MOD_VERSION + " \u00a78by \u00a76GBX Team", this.width / 2, py + 16, 0xFFFFFF);
+	//$$ }
 	//#elseif MC >= 12002
 	//$$ @Override
 	//$$ public void render(GuiGraphics g, int mx, int my, float delta)
