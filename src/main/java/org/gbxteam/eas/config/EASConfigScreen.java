@@ -104,7 +104,20 @@ public class EASConfigScreen extends Screen
 
 	// ─── Render ───────────────────────────────────────────────────────────────
 
-	//#if MC >= 12000
+	//#if MC >= 12002
+	//$$ @Override
+	//$$ public void render(GuiGraphics g, int mx, int my, float delta)
+	//$$ {
+	//$$ 	renderBackground(g, mx, my, delta);
+	//$$ 	int pw = Math.min(320, this.width - 40);
+	//$$ 	int px = (this.width - pw) / 2;
+	//$$ 	int py = this.height / 2 - 75;
+	//$$ 	g.fill(px - 8, py - 8, px + pw + 8, py + 145 + 8, 0xCC111122);
+	//$$ 	g.drawCenteredString(this.font, "\u00a7bEssential Auto Sprint", this.width / 2, py + 4, 0xFFFFFF);
+	//$$ 	g.drawCenteredString(this.font, "\u00a77v" + EssentialAutoSprint.MOD_VERSION + " \u00a78by \u00a76GBX Team", this.width / 2, py + 16, 0xFFFFFF);
+	//$$ 	super.render(g, mx, my, delta);
+	//$$ }
+	//#elseif MC >= 12000
 	//$$ @Override
 	//$$ public void render(GuiGraphics g, int mx, int my, float delta)
 	//$$ {
