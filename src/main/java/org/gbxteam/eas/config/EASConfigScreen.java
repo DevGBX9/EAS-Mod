@@ -49,23 +49,27 @@ public class EASConfigScreen extends Screen
 
 	private String getToggleLabel()
 	{
-		return EASConfig.INSTANCE.enabled ? "\u00a7a\u25cf Auto Sprint: ON" : "\u00a7c\u25cb Auto Sprint: OFF";
+		return EASConfig.INSTANCE.enabled ? "\u00a7a[ ON ]" : "\u00a7c[ OFF ]";
 	}
 
 	private String getKeybindLabel()
 	{
-		return "Toggle Key: \u00a7e" + GLFW.glfwGetKeyName(EASConfig.INSTANCE.toggleKey, 0);
+		String key = GLFW.glfwGetKeyName(EASConfig.INSTANCE.toggleKey, 0);
+		if (key == null) key = "?";
+		return "\u00a7b" + key.toUpperCase();
 	}
 
 	@Override
 	protected void init()
 	{
 		super.init();
-		int panelW = Math.min(320, this.width - 40);
-		int panelX = (this.width - panelW) / 2;
-		int startY = this.height / 2 - 60;
+		int pw = 240;
+		int px = (this.width - pw) / 2;
+		int py = this.height / 2 - 60;
+		int btnW = 80;
+		int btnX = px + pw - btnW - 8;
 
-		addEASButton(panelX, startY, panelW, 20, getToggleLabel(), button -> {
+		addEASButton(btnX, py + 24, btnW, 20, getToggleLabel(), button -> {
 			EASConfig.INSTANCE.enabled = !EASConfig.INSTANCE.enabled;
 			EASConfig.INSTANCE.save();
 			if (!EASConfig.INSTANCE.enabled && this.minecraft != null && this.minecraft.player != null)
@@ -73,19 +77,19 @@ public class EASConfigScreen extends Screen
 			this.minecraft.setScreen(new EASConfigScreen(this.parent));
 		});
 
-		String keybindLabel = waitingForKey ? "\u00a7ePress any key... (ESC to cancel)" : getKeybindLabel();
-		addEASButton(panelX, startY + 28, panelW, 20, keybindLabel, button -> {
+		String keybindLabel = waitingForKey ? "\u00a7e..." : getKeybindLabel();
+		addEASButton(btnX, py + 48, btnW, 20, keybindLabel, button -> {
 			EASConfigScreen next = new EASConfigScreen(this.parent);
 			next.waitingForKey = true;
 			this.minecraft.setScreen(next);
 		});
 
-		addEASButton(panelX, startY + 60, panelW, 20, "\u25b6  View on Modrinth", button -> {
+		addEASButton(btnX, py + 90, btnW, 20, "Open \u2192", button -> {
 			try { java.awt.Desktop.getDesktop().browse(java.net.URI.create("https://modrinth.com/mod/essential-auto-sprint-(eas)")); }
 			catch (Exception ignored) {}
 		});
 
-		addEASButton(panelX, startY + 88, panelW, 20, "Done", button -> this.minecraft.setScreen(this.parent));
+		addEASButton(this.width / 2 - 100, py + 130, 200, 20, "Close", button -> this.minecraft.setScreen(this.parent));
 	}
 
 	//#if MC >= 12110
@@ -126,33 +130,43 @@ public class EASConfigScreen extends Screen
 
 	//#if MC >= 260000
 	//$$ // In 26.1+, rendering is handled via widget extraction pipelining.
-	//$$ // Widgets draw themselves; no manual render() override needed.
+	//$$ // Widgets draw themselves; custom background requires distinct background widgets.
 	//#elseif MC >= 12102
-	//$$ // In 1.21.2+, Screen.render() already calls renderBackground internally (blur).
-	//$$ // Calling renderBackground ourselves would cause "Can only blur once per frame" crash.
-	//$$ // We call super.render() first to handle background+blur, then draw our overlay on top.
+	//$$ // In 1.21.2+, overriding renderBackground avoids double-blur while drawing under widgets.
 	//$$ @Override
-	//$$ public void render(GuiGraphics g, int mx, int my, float delta)
+	//$$ public void renderBackground(GuiGraphics g, int mx, int my, float delta)
 	//$$ {
-	//$$ 	super.render(g, mx, my, delta);
-	//$$ 	int pw = Math.min(320, this.width - 40);
+	//$$ 	super.renderBackground(g, mx, my, delta);
+	//$$ 	int pw = 240;
 	//$$ 	int px = (this.width - pw) / 2;
-	//$$ 	int py = this.height / 2 - 75;
-	//$$ 	g.fill(px - 8, py - 8, px + pw + 8, py + 145 + 8, 0xCC111122);
-	//$$ 	g.drawCenteredString(this.font, "\u00a7bEssential Auto Sprint", this.width / 2, py + 4, 0xFFFFFF);
-	//$$ 	g.drawCenteredString(this.font, "\u00a77v" + EssentialAutoSprint.MOD_VERSION + " \u00a78by \u00a76GBX Team", this.width / 2, py + 16, 0xFFFFFF);
+	//$$ 	int py = this.height / 2 - 60;
+	//$$ 	g.fill(px, py, px + pw, py + 120, 0xBB000000);
+	//$$ 	g.drawCenteredString(this.font, "\u00a7lESSENTIAL AUTO SPRINT", this.width / 2, py - 20, 0xFFFFFF);
+	//$$ 	g.drawString(this.font, "General", px + 8, py + 8, 0xAAAAAA, true);
+	//$$ 	g.fill(px + 8, py + 18, px + pw - 8, py + 19, 0x55FFFFFF);
+	//$$ 	g.drawString(this.font, "Mod Status", px + 8, py + 24 + 6, 0xFFFFFF, true);
+	//$$ 	g.drawString(this.font, "Shortcut Key", px + 8, py + 48 + 6, 0xFFFFFF, true);
+	//$$ 	g.drawString(this.font, "Links", px + 8, py + 74, 0xAAAAAA, true);
+	//$$ 	g.fill(px + 8, py + 84, px + pw - 8, py + 85, 0x55FFFFFF);
+	//$$ 	g.drawString(this.font, "Modrinth Page", px + 8, py + 90 + 6, 0xFFFFFF, true);
 	//$$ }
 	//#elseif MC >= 12002
 	//$$ @Override
 	//$$ public void render(GuiGraphics g, int mx, int my, float delta)
 	//$$ {
 	//$$ 	renderBackground(g, mx, my, delta);
-	//$$ 	int pw = Math.min(320, this.width - 40);
+	//$$ 	int pw = 240;
 	//$$ 	int px = (this.width - pw) / 2;
-	//$$ 	int py = this.height / 2 - 75;
-	//$$ 	g.fill(px - 8, py - 8, px + pw + 8, py + 145 + 8, 0xCC111122);
-	//$$ 	g.drawCenteredString(this.font, "\u00a7bEssential Auto Sprint", this.width / 2, py + 4, 0xFFFFFF);
-	//$$ 	g.drawCenteredString(this.font, "\u00a77v" + EssentialAutoSprint.MOD_VERSION + " \u00a78by \u00a76GBX Team", this.width / 2, py + 16, 0xFFFFFF);
+	//$$ 	int py = this.height / 2 - 60;
+	//$$ 	g.fill(px, py, px + pw, py + 120, 0xBB000000);
+	//$$ 	g.drawCenteredString(this.font, "\u00a7lESSENTIAL AUTO SPRINT", this.width / 2, py - 20, 0xFFFFFF);
+	//$$ 	g.drawString(this.font, "General", px + 8, py + 8, 0xAAAAAA, true);
+	//$$ 	g.fill(px + 8, py + 18, px + pw - 8, py + 19, 0x55FFFFFF);
+	//$$ 	g.drawString(this.font, "Mod Status", px + 8, py + 24 + 6, 0xFFFFFF, true);
+	//$$ 	g.drawString(this.font, "Shortcut Key", px + 8, py + 48 + 6, 0xFFFFFF, true);
+	//$$ 	g.drawString(this.font, "Links", px + 8, py + 74, 0xAAAAAA, true);
+	//$$ 	g.fill(px + 8, py + 84, px + pw - 8, py + 85, 0x55FFFFFF);
+	//$$ 	g.drawString(this.font, "Modrinth Page", px + 8, py + 90 + 6, 0xFFFFFF, true);
 	//$$ 	super.render(g, mx, my, delta);
 	//$$ }
 	//#elseif MC >= 12000
@@ -160,12 +174,18 @@ public class EASConfigScreen extends Screen
 	//$$ public void render(GuiGraphics g, int mx, int my, float delta)
 	//$$ {
 	//$$ 	renderBackground(g);
-	//$$ 	int pw = Math.min(320, this.width - 40);
+	//$$ 	int pw = 240;
 	//$$ 	int px = (this.width - pw) / 2;
-	//$$ 	int py = this.height / 2 - 75;
-	//$$ 	g.fill(px - 8, py - 8, px + pw + 8, py + 145 + 8, 0xCC111122);
-	//$$ 	g.drawCenteredString(this.font, "\u00a7bEssential Auto Sprint", this.width / 2, py + 4, 0xFFFFFF);
-	//$$ 	g.drawCenteredString(this.font, "\u00a77v" + EssentialAutoSprint.MOD_VERSION + " \u00a78by \u00a76GBX Team", this.width / 2, py + 16, 0xFFFFFF);
+	//$$ 	int py = this.height / 2 - 60;
+	//$$ 	g.fill(px, py, px + pw, py + 120, 0xBB000000);
+	//$$ 	g.drawCenteredString(this.font, "\u00a7lESSENTIAL AUTO SPRINT", this.width / 2, py - 20, 0xFFFFFF);
+	//$$ 	g.drawString(this.font, "General", px + 8, py + 8, 0xAAAAAA, true);
+	//$$ 	g.fill(px + 8, py + 18, px + pw - 8, py + 19, 0x55FFFFFF);
+	//$$ 	g.drawString(this.font, "Mod Status", px + 8, py + 24 + 6, 0xFFFFFF, true);
+	//$$ 	g.drawString(this.font, "Shortcut Key", px + 8, py + 48 + 6, 0xFFFFFF, true);
+	//$$ 	g.drawString(this.font, "Links", px + 8, py + 74, 0xAAAAAA, true);
+	//$$ 	g.fill(px + 8, py + 84, px + pw - 8, py + 85, 0x55FFFFFF);
+	//$$ 	g.drawString(this.font, "Modrinth Page", px + 8, py + 90 + 6, 0xFFFFFF, true);
 	//$$ 	super.render(g, mx, my, delta);
 	//$$ }
 	//#elseif MC >= 11600
@@ -173,12 +193,18 @@ public class EASConfigScreen extends Screen
 	//$$ public void render(PoseStack pose, int mx, int my, float delta)
 	//$$ {
 	//$$ 	renderBackground(pose);
-	//$$ 	int pw = Math.min(320, this.width - 40);
+	//$$ 	int pw = 240;
 	//$$ 	int px = (this.width - pw) / 2;
-	//$$ 	int py = this.height / 2 - 75;
-	//$$ 	fill(pose, px - 8, py - 8, px + pw + 8, py + 153, 0xCC111122);
-	//$$ 	drawCenteredString(pose, this.font, "\u00a7bEssential Auto Sprint", this.width / 2, py + 4, 0xFFFFFF);
-	//$$ 	drawCenteredString(pose, this.font, "\u00a77v" + EssentialAutoSprint.MOD_VERSION + " \u00a78by \u00a76GBX Team", this.width / 2, py + 16, 0xFFFFFF);
+	//$$ 	int py = this.height / 2 - 60;
+	//$$ 	fill(pose, px, py, px + pw, py + 120, 0xBB000000);
+	//$$ 	drawCenteredString(pose, this.font, "\u00a7lESSENTIAL AUTO SPRINT", this.width / 2, py - 20, 0xFFFFFF);
+	//$$ 	drawString(pose, this.font, "General", px + 8, py + 8, 0xAAAAAA);
+	//$$ 	fill(pose, px + 8, py + 18, px + pw - 8, py + 19, 0x55FFFFFF);
+	//$$ 	drawString(pose, this.font, "Mod Status", px + 8, py + 24 + 6, 0xFFFFFF);
+	//$$ 	drawString(pose, this.font, "Shortcut Key", px + 8, py + 48 + 6, 0xFFFFFF);
+	//$$ 	drawString(pose, this.font, "Links", px + 8, py + 74, 0xAAAAAA);
+	//$$ 	fill(pose, px + 8, py + 84, px + pw - 8, py + 85, 0x55FFFFFF);
+	//$$ 	drawString(pose, this.font, "Modrinth Page", px + 8, py + 90 + 6, 0xFFFFFF);
 	//$$ 	super.render(pose, mx, my, delta);
 	//$$ }
 	//#else
@@ -186,12 +212,18 @@ public class EASConfigScreen extends Screen
 	public void render(int mx, int my, float delta)
 	{
 		renderBackground();
-		int pw = Math.min(320, this.width - 40);
+		int pw = 240;
 		int px = (this.width - pw) / 2;
-		int py = this.height / 2 - 75;
-		fill(px - 8, py - 8, px + pw + 8, py + 153, 0xCC111122);
-		drawCenteredString(this.font, "\u00a7bEssential Auto Sprint", this.width / 2, py + 4, 0xFFFFFF);
-		drawCenteredString(this.font, "\u00a77v" + EssentialAutoSprint.MOD_VERSION + " \u00a78by \u00a76GBX Team", this.width / 2, py + 16, 0xFFFFFF);
+		int py = this.height / 2 - 60;
+		fill(px, py, px + pw, py + 120, 0xBB000000);
+		drawCenteredString(this.font, "\u00a7lESSENTIAL AUTO SPRINT", this.width / 2, py - 20, 0xFFFFFF);
+		drawString(this.font, "General", px + 8, py + 8, 0xAAAAAA);
+		fill(px + 8, py + 18, px + pw - 8, py + 19, 0x55FFFFFF);
+		drawString(this.font, "Mod Status", px + 8, py + 24 + 6, 0xFFFFFF);
+		drawString(this.font, "Shortcut Key", px + 8, py + 48 + 6, 0xFFFFFF);
+		drawString(this.font, "Links", px + 8, py + 74, 0xAAAAAA);
+		fill(px + 8, py + 84, px + pw - 8, py + 85, 0x55FFFFFF);
+		drawString(this.font, "Modrinth Page", px + 8, py + 90 + 6, 0xFFFFFF);
 		super.render(mx, my, delta);
 	}
 	//#endif
