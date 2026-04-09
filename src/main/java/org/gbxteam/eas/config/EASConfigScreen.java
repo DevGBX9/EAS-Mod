@@ -59,6 +59,20 @@ public class EASConfigScreen extends Screen
 		return "\u00a7b" + key.toUpperCase();
 	}
 
+	private void openModrinth()
+	{
+		try {
+			Class<?> utilClass = Class.forName("net.minecraft.Util");
+			Object os;
+			try { os = utilClass.getMethod("getPlatform").invoke(null); }
+			catch (Exception e) { os = utilClass.getMethod("getOperatingSystem").invoke(null); }
+			try { os.getClass().getMethod("openUri", java.net.URI.class).invoke(os, java.net.URI.create("https://modrinth.com/mod/essential-auto-sprint-(eas)")); }
+			catch (Exception e) { os.getClass().getMethod("openUri", String.class).invoke(os, "https://modrinth.com/mod/essential-auto-sprint-(eas)"); }
+		} catch (Exception e) {
+			try { java.awt.Desktop.getDesktop().browse(java.net.URI.create("https://modrinth.com/mod/essential-auto-sprint-(eas)")); } catch (Exception ignored) {}
+		}
+	}
+
 	@Override
 	protected void init()
 	{
@@ -66,13 +80,36 @@ public class EASConfigScreen extends Screen
 		int pw = 240;
 		int px = (this.width - pw) / 2;
 		int py = this.height / 2 - 60;
-		int btnW = 80;
-		int btnX = px + pw - btnW - 8;
 
 	    //#if MC >= 260000
-		//$$ // In 26.1.2+, manual render commands are replaced by widget insertions.
-		//$$ // We add background and text using custom widgets.
-		//#endif
+		//$$ // In 26.1, we fall back to a simple centered layout inside button text
+		//$$ // because rendering strings/boxes heavily changed to widgets pattern.
+		//$$ int bw = 200;
+		//$$ int bx = this.width / 2 - 100;
+		//$$ 
+		//$$ addEASButton(bx, py + 10, bw, 20, "Auto Sprint: " + getToggleLabel(), button -> {
+		//$$ 	EASConfig.INSTANCE.enabled = !EASConfig.INSTANCE.enabled;
+		//$$ 	EASConfig.INSTANCE.save();
+		//$$ 	if (!EASConfig.INSTANCE.enabled && this.minecraft != null && this.minecraft.player != null)
+		//$$ 		this.minecraft.player.setSprinting(false);
+		//$$ 	this.minecraft.setScreen(new EASConfigScreen(this.parent));
+		//$$ });
+		//$$ 
+		//$$ String kLbl = waitingForKey ? "\u00a7e..." : getKeybindLabel();
+		//$$ addEASButton(bx, py + 35, bw, 20, "Toggle Key: " + kLbl, button -> {
+		//$$ 	EASConfigScreen next = new EASConfigScreen(this.parent);
+		//$$ 	next.waitingForKey = true;
+		//$$ 	this.minecraft.setScreen(next);
+		//$$ });
+		//$$ 
+		//$$ addEASButton(bx, py + 70, bw, 20, "Modrinth Page \u2192", button -> {
+		//$$ 	openModrinth();
+		//$$ });
+		//$$ 
+		//$$ addEASButton(bx, py + 105, bw, 20, "Close", button -> this.minecraft.setScreen(this.parent));
+		//#else
+		int btnW = 80;
+		int btnX = px + pw - btnW - 8;
 
 		addEASButton(btnX, py + 24, btnW, 20, getToggleLabel(), button -> {
 			EASConfig.INSTANCE.enabled = !EASConfig.INSTANCE.enabled;
@@ -90,19 +127,11 @@ public class EASConfigScreen extends Screen
 		});
 
 		addEASButton(btnX, py + 90, btnW, 20, "Open \u2192", button -> {
-			try {
-				Class<?> utilClass = Class.forName("net.minecraft.Util");
-				Object os;
-				try { os = utilClass.getMethod("getPlatform").invoke(null); }
-				catch (Exception e) { os = utilClass.getMethod("getOperatingSystem").invoke(null); }
-				try { os.getClass().getMethod("openUri", java.net.URI.class).invoke(os, java.net.URI.create("https://modrinth.com/mod/essential-auto-sprint-(eas)")); }
-				catch (Exception e) { os.getClass().getMethod("openUri", String.class).invoke(os, "https://modrinth.com/mod/essential-auto-sprint-(eas)"); }
-			} catch (Exception e) {
-				try { java.awt.Desktop.getDesktop().browse(java.net.URI.create("https://modrinth.com/mod/essential-auto-sprint-(eas)")); } catch (Exception ignored) {}
-			}
+			openModrinth();
 		});
 
 		addEASButton(this.width / 2 - 100, py + 130, 200, 20, "Close", button -> this.minecraft.setScreen(this.parent));
+		//#endif
 	}
 
 	//#if MC >= 12110
