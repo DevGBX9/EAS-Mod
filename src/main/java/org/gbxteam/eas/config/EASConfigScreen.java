@@ -21,7 +21,9 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 //#endif
 
-//#if MC >= 12000
+//#if MC >= 260000
+//$$ // No graphics class to import, Rendering logic uses UI render state pipeline now
+//#elseif MC >= 12000
 //$$ import net.minecraft.client.gui.GuiGraphics;
 //#elseif MC >= 11600
 //$$ import com.mojang.blaze3d.vertex.PoseStack;
@@ -122,7 +124,10 @@ public class EASConfigScreen extends Screen
 
 	// ─── Render ───────────────────────────────────────────────────────────────
 
-	//#if MC >= 12002
+	//#if MC >= 260000
+	//$$ // In 26.1+, rendering is handled via widget extraction pipelining.
+	//$$ // Custom background rendering requires creating specific widgets now.
+	//#elseif MC >= 12002
 	//$$ @Override
 	//$$ public void render(GuiGraphics g, int mx, int my, float delta)
 	//$$ {

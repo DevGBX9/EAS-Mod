@@ -77,7 +77,9 @@ public abstract class MinecraftClientMixin
 					? "\u00a7aAuto Sprint: ON"
 					: "\u00a7cAuto Sprint: OFF";
 
-			//#if MC >= 11900
+			//#if MC >= 260000
+			//$$ mc.gui.setOverlayMessage(Component.literal(msgText), false);
+			//#elseif MC >= 11900
 			//$$ mc.player.displayClientMessage(Component.literal(msgText), true);
 			//#elseif MC >= 11700
 			//$$ mc.player.displayClientMessage(new TextComponent(msgText), true);
