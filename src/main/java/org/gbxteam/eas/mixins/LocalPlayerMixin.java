@@ -45,7 +45,9 @@ public abstract class LocalPlayerMixin
 		if (!EASConfig.INSTANCE.enabled) return;
 		if (self.isSpectator()) return;
 
-		//#if MC >= 11600
+		//#if MC >= 12110
+		//$$ boolean movingForward = self.input.hasForwardImpulse();
+		//#elseif MC >= 11600
 		boolean movingForward = self.input.forwardImpulse > 0.0F;
 		//#else
 		//$$ boolean movingForward = self.input.up;

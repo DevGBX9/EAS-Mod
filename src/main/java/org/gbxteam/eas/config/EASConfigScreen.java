@@ -86,6 +86,23 @@ public class EASConfigScreen extends Screen
 		addEASButton(panelX, startY + 88, panelW, 20, "Done", button -> this.minecraft.setScreen(this.parent));
 	}
 
+	//#if MC >= 12110
+	//$$ @Override
+	//$$ public boolean keyPressed(net.minecraft.client.input.KeyEvent event)
+	//$$ {
+	//$$ 	if (waitingForKey)
+	//$$ 	{
+	//$$ 		if (event.key() != GLFW.GLFW_KEY_ESCAPE)
+	//$$ 		{
+	//$$ 			EASConfig.INSTANCE.toggleKey = event.key();
+	//$$ 			EASConfig.INSTANCE.save();
+	//$$ 		}
+	//$$ 		this.minecraft.setScreen(new EASConfigScreen(this.parent));
+	//$$ 		return true;
+	//$$ 	}
+	//$$ 	return super.keyPressed(event);
+	//$$ }
+	//#else
 	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers)
 	{
@@ -101,6 +118,7 @@ public class EASConfigScreen extends Screen
 		}
 		return super.keyPressed(keyCode, scanCode, modifiers);
 	}
+	//#endif
 
 	// ─── Render ───────────────────────────────────────────────────────────────
 
