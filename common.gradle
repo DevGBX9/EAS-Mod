@@ -26,12 +26,6 @@ repositories {
 		url = 'https://maven.terraformersmc.com/releases'
 		content { includeGroup('com.terraformersmc') }
 	}
-	// Patbox Maven — provides eu.pb4:placeholder-api (transitive dep of ModMenu 9+)
-	maven {
-		name = 'Patbox'
-		url = 'https://maven.pb4.eu/releases'
-		content { includeGroup('eu.pb4') }
-	}
 }
 
 dependencies {
@@ -60,9 +54,15 @@ dependencies {
 	}
 	autoImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	// ModMenu integration — optional, client-side only, excluded for 26.x+
+	// ModMenu integration — compile-only (API only), excluded for 26.x+
+	// transitive = false: we only need the ModMenuApi interface, not its runtime deps (placeholder-api etc.)
 	if (mcVersion < 26_00_00 && project.hasProperty('modmenu_version') && project.modmenu_version.trim() != '') {
-		autoCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+		def mmNotation = "com.terraformersmc:modmenu:${project.modmenu_version}"
+		if (unobfuscated) {
+			compileOnly(mmNotation) { transitive = false }
+		} else {
+			modCompileOnly(mmNotation) { transitive = false }
+		}
 	}
 
 }
