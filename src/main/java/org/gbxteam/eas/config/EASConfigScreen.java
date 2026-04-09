@@ -149,7 +149,7 @@ public class EASConfigScreen extends Screen
 
 	private void addEASButton(int x, int y, int w, int h, String label, Button.OnPress action)
 	{
-		//#if MC >= 12000
+		//#if MC >= 11904
 		//$$ this.addRenderableWidget(Button.builder(Component.literal(label), action).bounds(x, y, w, h).build());
 		//#elseif MC >= 11900
 		//$$ this.addRenderableWidget(new Button(x, y, w, h, Component.literal(label), action));
