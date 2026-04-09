@@ -84,7 +84,7 @@ public abstract class MinecraftClientMixin
 			//#elseif MC >= 1.16.0
 			mc.player.displayClientMessage(new TextComponent(msgText), true);
 			//#else
-			//$$ mc.player.sendMessage(new net.minecraft.network.chat.StringTextComponent(msgText));
+			//$$ // 1.14-1.15: action bar API unavailable, skip overlay notification
 			//#endif
 		}
 
