@@ -7,22 +7,22 @@
 
 package org.gbxteam.eas.modmenu;
 
-//#if MC >= 11500 && MC < 260000
-import com.terraformersmc.modmenu.api.ConfigScreenFactory;
-import com.terraformersmc.modmenu.api.ModMenuApi;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import org.gbxteam.eas.config.EASConfigScreen;
-
-@Environment(EnvType.CLIENT)
-public class EASModMenuIntegration implements ModMenuApi
-{
-	@Override
-	public ConfigScreenFactory<?> getModConfigScreenFactory()
-	{
-		return EASConfigScreen::new;
-	}
-}
+//#if MC >= 11600 && MC < 260000
+//$$ import com.terraformersmc.modmenu.api.ConfigScreenFactory;
+//$$ import com.terraformersmc.modmenu.api.ModMenuApi;
+//$$ import net.fabricmc.api.EnvType;
+//$$ import net.fabricmc.api.Environment;
+//$$ import org.gbxteam.eas.config.EASConfigScreen;
+//$$
+//$$ @Environment(EnvType.CLIENT)
+//$$ public class EASModMenuIntegration implements ModMenuApi
+//$$ {
+//$$ 	@Override
+//$$ 	public ConfigScreenFactory<?> getModConfigScreenFactory()
+//$$ 	{
+//$$ 		return EASConfigScreen::new;
+//$$ 	}
+//$$ }
 //#else
-//$$ public class EASModMenuIntegration {}
+public class EASModMenuIntegration {}
 //#endif
