@@ -11,9 +11,8 @@ import org.lwjgl.glfw.GLFW;
 
 //#if MC >= 11900
 //$$ import net.minecraft.network.chat.Component;
-//#elseif MC >= 11700
-//$$ import net.minecraft.network.chat.TextComponent;
 //#else
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 //#endif
 
