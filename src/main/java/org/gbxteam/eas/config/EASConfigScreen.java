@@ -84,11 +84,14 @@ public class EASConfigScreen extends Screen
 	private void openUrl(String url)
 	{
 		try {
-			//#if MC >= 11400
-			net.minecraft.Util.getOperatingSystem().open(java.net.URI.create(url));
-			//#else
-			//$$ java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
-			//#endif
+			String os = System.getProperty("os.name").toLowerCase();
+			if (os.contains("win")) {
+				Runtime.getRuntime().exec(new String[]{"rundll32", "url.dll,FileProtocolHandler", url});
+			} else if (os.contains("mac")) {
+				Runtime.getRuntime().exec(new String[]{"open", url});
+			} else {
+				Runtime.getRuntime().exec(new String[]{"xdg-open", url});
+			}
 		} catch (Exception e) {
 			try {
 				java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
