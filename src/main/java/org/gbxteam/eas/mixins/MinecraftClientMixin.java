@@ -51,27 +51,40 @@ public abstract class MinecraftClientMixin
 	{
 		Minecraft mc = (Minecraft) (Object) this;
 
-		if (!eas$initializedKeys && mc.options != null) {
+		if (!eas$initializedKeys && mc.options != null && org.gbxteam.eas.EssentialAutoSprintClient.toggleKeyMapping != null) {
 			eas$initializedKeys = true;
 			try {
-				for (java.lang.reflect.Field f : mc.options.getClass().getFields()) {
-					if (f.getType().isArray() && f.getType().getComponentType() == net.minecraft.client.KeyMapping.class) {
-						net.minecraft.client.KeyMapping[] old = (net.minecraft.client.KeyMapping[]) f.get(mc.options);
-						boolean exists = false;
-						for (net.minecraft.client.KeyMapping k : old) {
-							if (k == org.gbxteam.eas.EssentialAutoSprintClient.toggleKeyMapping) exists = true;
-						}
-						if (!exists && org.gbxteam.eas.EssentialAutoSprintClient.toggleKeyMapping != null) {
-							net.minecraft.client.KeyMapping[] newMappings = new net.minecraft.client.KeyMapping[old.length + 1];
-							System.arraycopy(old, 0, newMappings, 0, old.length);
-							newMappings[old.length] = org.gbxteam.eas.EssentialAutoSprintClient.toggleKeyMapping;
-							f.set(mc.options, newMappings);
-						}
-						break;
-					}
+				//#if MC >= 12004
+				//$$ // Options fields in 1.20.4+ might be final or differently structured, wait - they are final KeyMapping[] keyMappings
+				//$$ net.minecraft.client.KeyMapping[] old = mc.options.keyMappings;
+				//$$ boolean exists = false; for (net.minecraft.client.KeyMapping k : old) if (k == org.gbxteam.eas.EssentialAutoSprintClient.toggleKeyMapping) exists = true;
+				//$$ if (!exists) {
+				//$$ 	net.minecraft.client.KeyMapping[] newMappings = new net.minecraft.client.KeyMapping[old.length + 1];
+				//$$ 	System.arraycopy(old, 0, newMappings, 0, old.length);
+				//$$ 	newMappings[old.length] = org.gbxteam.eas.EssentialAutoSprintClient.toggleKeyMapping;
+				//$$ 	mc.options.keyMappings = newMappings;
+				//$$ }
+				//#elseif MC >= 11500
+				//$$ net.minecraft.client.KeyMapping[] old = mc.options.keyMappings;
+				//$$ boolean exists = false; for (net.minecraft.client.KeyMapping k : old) if (k == org.gbxteam.eas.EssentialAutoSprintClient.toggleKeyMapping) exists = true;
+				//$$ if (!exists) {
+				//$$ 	net.minecraft.client.KeyMapping[] newMappings = new net.minecraft.client.KeyMapping[old.length + 1];
+				//$$ 	System.arraycopy(old, 0, newMappings, 0, old.length);
+				//$$ 	newMappings[old.length] = org.gbxteam.eas.EssentialAutoSprintClient.toggleKeyMapping;
+				//$$ 	mc.options.keyMappings = newMappings;
+				//$$ }
+				//#else
+				net.minecraft.client.KeyMapping[] old = mc.options.keyMappings; // wait, is it keyMappings in 1.14?
+				boolean exists = false; for (net.minecraft.client.KeyMapping k : old) if (k == org.gbxteam.eas.EssentialAutoSprintClient.toggleKeyMapping) exists = true;
+				if (!exists) {
+					net.minecraft.client.KeyMapping[] newMappings = new net.minecraft.client.KeyMapping[old.length + 1];
+					System.arraycopy(old, 0, newMappings, 0, old.length);
+					newMappings[old.length] = org.gbxteam.eas.EssentialAutoSprintClient.toggleKeyMapping;
+					mc.options.keyMappings = newMappings;
 				}
+				//#endif
 			} catch (Exception e) {
-				org.gbxteam.eas.EssentialAutoSprint.LOGGER.error("[EAS] Failed to inject vanilla keybinding:", e);
+				org.gbxteam.eas.EssentialAutoSprint.LOGGER.error("[EAS] Failed to inject vanilla keybinding directly:", e);
 			}
 		}
 
