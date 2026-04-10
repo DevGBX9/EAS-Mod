@@ -16,7 +16,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 //#endif
 
-//#if MC >= 12000
+//#if MC >= 12000 && MC < 260000
 //$$ import net.minecraft.client.gui.GuiGraphics;
 //#endif
 
