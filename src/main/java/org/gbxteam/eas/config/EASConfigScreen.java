@@ -32,7 +32,9 @@ public class EASConfigScreen extends Screen
 	public EASConfigScreen(Screen parent, boolean tempEnabled, int tempKey, boolean isDirty)
 	{
 		//#if MC >= 11904
-		//$$ super(Component.literal("EAS Config"));
+		//$$ super(net.minecraft.network.chat.Component.literal("EAS Config"));
+		//#elseif MC >= 11900
+		//$$ super(net.minecraft.network.chat.Component.literal("EAS Config"));
 		//#elseif MC >= 11700
 		//$$ super(new TextComponent("EAS Config"));
 		//#elseif MC >= 11600
