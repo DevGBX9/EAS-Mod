@@ -43,7 +43,7 @@ public class EASConfigScreen extends Screen
 		this.parent = parent;
 		this.tempEnabled = tempEnabled;
 		this.tempKey = tempKey;
-		this.isDirty = isDirty;
+		this.isDirty = (tempEnabled != EASConfig.INSTANCE.enabled) || (tempKey != EASConfig.INSTANCE.toggleKey);
 	}
 
 	public EASConfigScreen(Screen parent)
@@ -164,10 +164,10 @@ public class EASConfigScreen extends Screen
 	//$$ 	int px = (this.width - pw) / 2;
 	//$$ 	int py = this.height / 2 - 72;
 	//$$ 	g.fill(px, py, px + pw, py + 144, 0xBB000000);
-	//$$ 	g.fill(px - 1, py - 1, px + pw + 1, py, 0x88FFFFFF);
-	//$$ 	g.fill(px - 1, py + 144, px + pw + 1, py + 145, 0x88FFFFFF);
-	//$$ 	g.fill(px - 1, py, px, py + 144, 0x88FFFFFF);
-	//$$ 	g.fill(px + pw, py, px + pw + 1, py + 144, 0x88FFFFFF);
+	//$$ 	g.fill(px - 1, py - 1, px + pw + 1, py, 0x44FFFFFF);
+	//$$ 	g.fill(px - 1, py + 144, px + pw + 1, py + 145, 0x44FFFFFF);
+	//$$ 	g.fill(px - 1, py, px, py + 144, 0x44FFFFFF);
+	//$$ 	g.fill(px + pw, py, px + pw + 1, py + 144, 0x44FFFFFF);
 	//$$ 	g.fill(px + 8, py + 18, px + pw - 8, py + 19, 0x55FFFFFF);
 	//$$ 	g.fill(px + 8, py + 84, px + pw - 8, py + 85, 0x55FFFFFF);
 	//$$ 	try {
@@ -214,10 +214,10 @@ public class EASConfigScreen extends Screen
 	//$$ 	int px = (this.width - pw) / 2;
 	//$$ 	int py = this.height / 2 - 72;
 	//$$ 	g.fill(px, py, px + pw, py + 144, 0xBB000000);
-	//$$ 	g.fill(px - 1, py - 1, px + pw + 1, py, 0x88FFFFFF);
-	//$$ 	g.fill(px - 1, py + 144, px + pw + 1, py + 145, 0x88FFFFFF);
-	//$$ 	g.fill(px - 1, py, px, py + 144, 0x88FFFFFF);
-	//$$ 	g.fill(px + pw, py, px + pw + 1, py + 144, 0x88FFFFFF);
+	//$$ 	g.fill(px - 1, py - 1, px + pw + 1, py, 0x44FFFFFF);
+	//$$ 	g.fill(px - 1, py + 144, px + pw + 1, py + 145, 0x44FFFFFF);
+	//$$ 	g.fill(px - 1, py, px, py + 144, 0x44FFFFFF);
+	//$$ 	g.fill(px + pw, py, px + pw + 1, py + 144, 0x44FFFFFF);
 	//$$ 	g.drawCenteredString(this.font, "\u00a7lESSENTIAL AUTO SPRINT", this.width / 2, py - 20, 0xFFFFFFFF);
 	//$$ 	g.drawString(this.font, "General", px + 8, py + 8, 0xFFAAAAAA, true);
 	//$$ 	g.fill(px + 8, py + 18, px + pw - 8, py + 19, 0x55FFFFFF);
@@ -237,10 +237,10 @@ public class EASConfigScreen extends Screen
 	//$$ 	int px = (this.width - pw) / 2;
 	//$$ 	int py = this.height / 2 - 72;
 	//$$ 	g.fill(px, py, px + pw, py + 144, 0xBB000000);
-	//$$ 	g.fill(px - 1, py - 1, px + pw + 1, py, 0x88FFFFFF);
-	//$$ 	g.fill(px - 1, py + 144, px + pw + 1, py + 145, 0x88FFFFFF);
-	//$$ 	g.fill(px - 1, py, px, py + 144, 0x88FFFFFF);
-	//$$ 	g.fill(px + pw, py, px + pw + 1, py + 144, 0x88FFFFFF);
+	//$$ 	g.fill(px - 1, py - 1, px + pw + 1, py, 0x44FFFFFF);
+	//$$ 	g.fill(px - 1, py + 144, px + pw + 1, py + 145, 0x44FFFFFF);
+	//$$ 	g.fill(px - 1, py, px, py + 144, 0x44FFFFFF);
+	//$$ 	g.fill(px + pw, py, px + pw + 1, py + 144, 0x44FFFFFF);
 	//$$ 	g.drawCenteredString(this.font, "\u00a7lESSENTIAL AUTO SPRINT", this.width / 2, py - 20, 0xFFFFFFFF);
 	//$$ 	g.drawString(this.font, "General", px + 8, py + 8, 0xFFAAAAAA, true);
 	//$$ 	g.fill(px + 8, py + 18, px + pw - 8, py + 19, 0x55FFFFFF);
@@ -261,10 +261,10 @@ public class EASConfigScreen extends Screen
 	//$$ 	int px = (this.width - pw) / 2;
 	//$$ 	int py = this.height / 2 - 72;
 	//$$ 	g.fill(px, py, px + pw, py + 144, 0xBB000000);
-	//$$ 	g.fill(px - 1, py - 1, px + pw + 1, py, 0x88FFFFFF);
-	//$$ 	g.fill(px - 1, py + 144, px + pw + 1, py + 145, 0x88FFFFFF);
-	//$$ 	g.fill(px - 1, py, px, py + 144, 0x88FFFFFF);
-	//$$ 	g.fill(px + pw, py, px + pw + 1, py + 144, 0x88FFFFFF);
+	//$$ 	g.fill(px - 1, py - 1, px + pw + 1, py, 0x44FFFFFF);
+	//$$ 	g.fill(px - 1, py + 144, px + pw + 1, py + 145, 0x44FFFFFF);
+	//$$ 	g.fill(px - 1, py, px, py + 144, 0x44FFFFFF);
+	//$$ 	g.fill(px + pw, py, px + pw + 1, py + 144, 0x44FFFFFF);
 	//$$ 	g.drawCenteredString(this.font, "\u00a7lESSENTIAL AUTO SPRINT", this.width / 2, py - 20, 0xFFFFFFFF);
 	//$$ 	g.drawString(this.font, "General", px + 8, py + 8, 0xFFAAAAAA, true);
 	//$$ 	g.fill(px + 8, py + 18, px + pw - 8, py + 19, 0x55FFFFFF);
@@ -285,10 +285,10 @@ public class EASConfigScreen extends Screen
 	//$$ 	int px = (this.width - pw) / 2;
 	//$$ 	int py = this.height / 2 - 72;
 	//$$ 	fill(pose, px, py, px + pw, py + 144, 0xBB000000);
-	//$$ 	fill(pose, px - 1, py - 1, px + pw + 1, py, 0x88FFFFFF);
-	//$$ 	fill(pose, px - 1, py + 144, px + pw + 1, py + 145, 0x88FFFFFF);
-	//$$ 	fill(pose, px - 1, py, px, py + 144, 0x88FFFFFF);
-	//$$ 	fill(pose, px + pw, py, px + pw + 1, py + 144, 0x88FFFFFF);
+	//$$ 	fill(pose, px - 1, py - 1, px + pw + 1, py, 0x44FFFFFF);
+	//$$ 	fill(pose, px - 1, py + 144, px + pw + 1, py + 145, 0x44FFFFFF);
+	//$$ 	fill(pose, px - 1, py, px, py + 144, 0x44FFFFFF);
+	//$$ 	fill(pose, px + pw, py, px + pw + 1, py + 144, 0x44FFFFFF);
 	//$$ 	drawCenteredString(pose, this.font, "\u00a7lESSENTIAL AUTO SPRINT", this.width / 2, py - 20, 0xFFFFFFFF);
 	//$$ 	drawString(pose, this.font, "General", px + 8, py + 8, 0xFFAAAAAA);
 	//$$ 	fill(pose, px + 8, py + 18, px + pw - 8, py + 19, 0x55FFFFFF);
@@ -309,10 +309,10 @@ public class EASConfigScreen extends Screen
 		int px = (this.width - pw) / 2;
 		int py = this.height / 2 - 72;
 		fill(px, py, px + pw, py + 144, 0xBB000000);
-		fill(px - 1, py - 1, px + pw + 1, py, 0x88FFFFFF); // border
-		fill(px - 1, py + 144, px + pw + 1, py + 145, 0x88FFFFFF); // border
-		fill(px - 1, py, px, py + 144, 0x88FFFFFF); // border
-		fill(px + pw, py, px + pw + 1, py + 144, 0x88FFFFFF); // border
+		fill(px - 1, py - 1, px + pw + 1, py, 0x44FFFFFF); // border
+		fill(px - 1, py + 144, px + pw + 1, py + 145, 0x44FFFFFF); // border
+		fill(px - 1, py, px, py + 144, 0x44FFFFFF); // border
+		fill(px + pw, py, px + pw + 1, py + 144, 0x44FFFFFF); // border
 		drawCenteredString(this.font, "\u00a7lESSENTIAL AUTO SPRINT", this.width / 2, py - 20, 0xFFFFFFFF);
 		drawString(this.font, "General", px + 8, py + 8, 0xFFAAAAAA);
 		fill(px + 8, py + 18, px + pw - 8, py + 19, 0x55FFFFFF);
