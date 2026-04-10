@@ -31,6 +31,6 @@ public class EssentialAutoSprintClient implements ClientModInitializer
 	public void onInitializeClient()
 	{
 		EASConfig.load();
-		EssentialAutoSprint.LOGGER.info("[EAS] Client initialized ?" Auto Sprint ready.");
+		EssentialAutoSprint.LOGGER.info("[EAS] Client initialized - Auto Sprint ready.");
 	}
 }
