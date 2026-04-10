@@ -84,9 +84,17 @@ public class EASConfigScreen extends Screen
 	private void openUrl(String url)
 	{
 		try {
-			java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
+			//#if MC >= 11400
+			net.minecraft.Util.getOperatingSystem().open(java.net.URI.create(url));
+			//#else
+			//$$ java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
+			//#endif
 		} catch (Exception e) {
-			org.gbxteam.eas.EssentialAutoSprint.LOGGER.error("Could not open URL: " + e.getMessage());
+			try {
+				java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
+			} catch (Exception e2) {
+				org.gbxteam.eas.EssentialAutoSprint.LOGGER.error("Could not open URL: " + e2.getMessage());
+			}
 		}
 	}
 
