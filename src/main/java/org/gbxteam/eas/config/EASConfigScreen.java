@@ -143,21 +143,45 @@ public class EASConfigScreen extends Screen
 
 	//#if MC >= 260000
 	//$$ @Override
-	//$$ protected void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor g, int mx, int my, float delta)
+	//$$ public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor g, int mx, int my, float delta)
 	//$$ {
 	//$$ 	super.extractRenderState(g, mx, my, delta);
 	//$$ 	int pw = 240;
 	//$$ 	int px = (this.width - pw) / 2;
 	//$$ 	int py = this.height / 2 - 60;
 	//$$ 	g.fill(px, py, px + pw, py + 120, 0xBB000000);
-	//$$ 	g.drawCenteredString(this.font, "\u00a7lESSENTIAL AUTO SPRINT", this.width / 2, py - 20, 0xFFFFFFFF);
-	//$$ 	g.drawString(this.font, "General", px + 8, py + 8, 0xFFAAAAAA, true);
 	//$$ 	g.fill(px + 8, py + 18, px + pw - 8, py + 19, 0x55FFFFFF);
-	//$$ 	g.drawString(this.font, "Mod Status", px + 8, py + 24 + 6, 0xFFFFFFFF, true);
-	//$$ 	g.drawString(this.font, "Shortcut Key", px + 8, py + 48 + 6, 0xFFFFFFFF, true);
-	//$$ 	g.drawString(this.font, "Links", px + 8, py + 74, 0xFFAAAAAA, true);
 	//$$ 	g.fill(px + 8, py + 84, px + pw - 8, py + 85, 0x55FFFFFF);
-	//$$ 	g.drawString(this.font, "Modrinth Page", px + 8, py + 90 + 6, 0xFFFFFFFF, true);
+	//$$ 	try {
+	//$$ 		java.lang.reflect.Method drawC = null, drawS = null, draw = null;
+	//$$ 		for (java.lang.reflect.Method m : g.getClass().getMethods()) {
+	//$$ 			Class<?>[] p = m.getParameterTypes();
+	//$$ 			if (p.length >= 5 && p[0].isAssignableFrom(this.font.getClass()) && p[1] == String.class && p[2] == int.class && p[3] == int.class && p[4] == int.class) {
+	//$$ 				if (m.getName().toLowerCase().contains("centered")) drawC = m;
+	//$$ 				else if (p.length == 6 && p[5] == boolean.class) drawS = m;
+	//$$ 				else draw = m;
+	//$$ 			}
+	//$$ 		}
+	//$$ 		if (drawC != null) {
+	//$$ 			if (drawC.getParameterCount() == 5) drawC.invoke(g, this.font, "\u00a7lESSENTIAL AUTO SPRINT", this.width / 2, py - 20, 0xFFFFFFFF);
+	//$$ 			else if (drawC.getParameterCount() == 6) drawC.invoke(g, this.font, "\u00a7lESSENTIAL AUTO SPRINT", this.width / 2, py - 20, 0xFFFFFFFF, true);
+	//$$ 		} else if (drawS != null) {
+	//$$ 			drawS.invoke(g, this.font, "\u00a7lESSENTIAL AUTO SPRINT", this.width / 2 - this.font.width("\u00a7lESSENTIAL AUTO SPRINT") / 2, py - 20, 0xFFFFFFFF, true);
+	//$$ 		}
+	//$$ 		if (drawS != null) {
+	//$$ 			drawS.invoke(g, this.font, "General", px + 8, py + 8, 0xFFAAAAAA, true);
+	//$$ 			drawS.invoke(g, this.font, "Mod Status", px + 8, py + 24 + 6, 0xFFFFFFFF, true);
+	//$$ 			drawS.invoke(g, this.font, "Shortcut Key", px + 8, py + 48 + 6, 0xFFFFFFFF, true);
+	//$$ 			drawS.invoke(g, this.font, "Links", px + 8, py + 74, 0xFFAAAAAA, true);
+	//$$ 			drawS.invoke(g, this.font, "Modrinth Page", px + 8, py + 90 + 6, 0xFFFFFFFF, true);
+	//$$ 		} else if (draw != null) {
+	//$$ 			draw.invoke(g, this.font, "General", px + 8, py + 8, 0xFFAAAAAA);
+	//$$ 			draw.invoke(g, this.font, "Mod Status", px + 8, py + 24 + 6, 0xFFFFFFFF);
+	//$$ 			draw.invoke(g, this.font, "Shortcut Key", px + 8, py + 48 + 6, 0xFFFFFFFF);
+	//$$ 			draw.invoke(g, this.font, "Links", px + 8, py + 74, 0xFFAAAAAA);
+	//$$ 			draw.invoke(g, this.font, "Modrinth Page", px + 8, py + 90 + 6, 0xFFFFFFFF);
+	//$$ 		}
+	//$$ 	} catch (Exception ignored) {}
 	//$$ }
 	//#elseif MC >= 12102
 	//$$ // In 1.21.2+, overriding renderBackground avoids double-blur while drawing under widgets.
