@@ -24,22 +24,22 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 
-//#if MC >= 11802
-//$$ import com.mojang.logging.LogUtils;
-//$$ import org.slf4j.Logger;
-//#else
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-//#endif
-
 public class EssentialAutoSprint implements ModInitializer
 {
-	public static final Logger LOGGER =
-			//#if MC >= 11802
-			//$$ LogUtils.getLogger();
-			//#else
-			LogManager.getLogger();
-			//#endif
+	public static class ModLogger {
+		public void info(String msg) {
+			System.out.println("[EAS] " + msg);
+		}
+		public void error(String msg) {
+			System.err.println("[EAS] ERROR: " + msg);
+		}
+		public void error(String msg, Throwable t) {
+			System.err.println("[EAS] ERROR: " + msg);
+			if (t != null) t.printStackTrace(System.err);
+		}
+	}
+
+	public static final ModLogger LOGGER = new ModLogger();
 
 	public static final String MOD_ID = "eas";
 	public static String MOD_VERSION = "unknown";
