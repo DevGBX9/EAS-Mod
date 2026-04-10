@@ -57,9 +57,9 @@ public class EASConfigScreen extends Screen
 			return "NONE";
 
 		//#if MC >= 11900
-		//$$ return InputConstants.getKey(this.tempKey, -1).getDisplayName().getString();
+		//$$ return InputConstants.Type.KEYSYM.getOrCreate(this.tempKey).getDisplayName().getString();
 		//#else
-		return InputConstants.getKey(this.tempKey, -1).getName();
+		return InputConstants.Type.KEYSYM.getOrCreate(this.tempKey).getName();
 		//#endif
 	}
 
