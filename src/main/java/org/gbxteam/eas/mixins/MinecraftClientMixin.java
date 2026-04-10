@@ -63,6 +63,7 @@ public abstract class MinecraftClientMixin
 				//$$ 	System.arraycopy(old, 0, newMappings, 0, old.length);
 				//$$ 	newMappings[old.length] = org.gbxteam.eas.EssentialAutoSprintClient.toggleKeyMapping;
 				//$$ 	mc.options.keyMappings = newMappings;
+				//$$    net.minecraft.client.KeyMapping.resetMapping();
 				//$$ }
 				//#elseif MC >= 11500
 				//$$ net.minecraft.client.KeyMapping[] old = mc.options.keyMappings;
@@ -72,6 +73,7 @@ public abstract class MinecraftClientMixin
 				//$$ 	System.arraycopy(old, 0, newMappings, 0, old.length);
 				//$$ 	newMappings[old.length] = org.gbxteam.eas.EssentialAutoSprintClient.toggleKeyMapping;
 				//$$ 	mc.options.keyMappings = newMappings;
+				//$$    net.minecraft.client.KeyMapping.resetMapping();
 				//$$ }
 				//#else
 				net.minecraft.client.KeyMapping[] old = mc.options.keyMappings; // wait, is it keyMappings in 1.14?
@@ -81,6 +83,7 @@ public abstract class MinecraftClientMixin
 					System.arraycopy(old, 0, newMappings, 0, old.length);
 					newMappings[old.length] = org.gbxteam.eas.EssentialAutoSprintClient.toggleKeyMapping;
 					mc.options.keyMappings = newMappings;
+					net.minecraft.client.KeyMapping.resetMapping();
 				}
 				//#endif
 			} catch (Exception e) {
