@@ -80,34 +80,6 @@ public class EASConfigScreen extends Screen
 		int pw = 240;
 		int px = (this.width - pw) / 2;
 		int py = this.height / 2 - 60;
-
-	    //#if MC >= 260000
-		//$$ // In 26.1, we fall back to a simple centered layout inside button text
-		//$$ // because rendering strings/boxes heavily changed to widgets pattern.
-		//$$ int bw = 200;
-		//$$ int bx = this.width / 2 - 100;
-		//$$ 
-		//$$ addEASButton(bx, py + 10, bw, 20, "Auto Sprint: " + getToggleLabel(), button -> {
-		//$$ 	EASConfig.INSTANCE.enabled = !EASConfig.INSTANCE.enabled;
-		//$$ 	EASConfig.INSTANCE.save();
-		//$$ 	if (!EASConfig.INSTANCE.enabled && this.minecraft != null && this.minecraft.player != null)
-		//$$ 		this.minecraft.player.setSprinting(false);
-		//$$ 	this.minecraft.setScreen(new EASConfigScreen(this.parent));
-		//$$ });
-		//$$ 
-		//$$ String kLbl = waitingForKey ? "\u00a7e..." : getKeybindLabel();
-		//$$ addEASButton(bx, py + 35, bw, 20, "Toggle Key: " + kLbl, button -> {
-		//$$ 	EASConfigScreen next = new EASConfigScreen(this.parent);
-		//$$ 	next.waitingForKey = true;
-		//$$ 	this.minecraft.setScreen(next);
-		//$$ });
-		//$$ 
-		//$$ addEASButton(bx, py + 70, bw, 20, "Modrinth Page \u2192", button -> {
-		//$$ 	openModrinth();
-		//$$ });
-		//$$ 
-		//$$ addEASButton(bx, py + 105, bw, 20, "Close", button -> this.minecraft.setScreen(this.parent));
-		//#else
 		int btnW = 80;
 		int btnX = px + pw - btnW - 8;
 
@@ -131,7 +103,6 @@ public class EASConfigScreen extends Screen
 		});
 
 		addEASButton(this.width / 2 - 100, py + 130, 200, 20, "Close", button -> this.minecraft.setScreen(this.parent));
-		//#endif
 	}
 
 	//#if MC >= 12110
@@ -171,8 +142,23 @@ public class EASConfigScreen extends Screen
 	// ─── Render ───────────────────────────────────────────────────────────────
 
 	//#if MC >= 260000
-	//$$ // Tiny Takeover specific custom widgets will be placed here separately if requested,
-	//$$ // but right now 26.1 has broken legacy render logic anyway.
+	//$$ @Override
+	//$$ protected void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor g, int mx, int my, float delta)
+	//$$ {
+	//$$ 	super.extractRenderState(g, mx, my, delta);
+	//$$ 	int pw = 240;
+	//$$ 	int px = (this.width - pw) / 2;
+	//$$ 	int py = this.height / 2 - 60;
+	//$$ 	g.fill(px, py, px + pw, py + 120, 0xBB000000);
+	//$$ 	g.drawCenteredString(this.font, "\u00a7lESSENTIAL AUTO SPRINT", this.width / 2, py - 20, 0xFFFFFFFF);
+	//$$ 	g.drawString(this.font, "General", px + 8, py + 8, 0xFFAAAAAA, true);
+	//$$ 	g.fill(px + 8, py + 18, px + pw - 8, py + 19, 0x55FFFFFF);
+	//$$ 	g.drawString(this.font, "Mod Status", px + 8, py + 24 + 6, 0xFFFFFFFF, true);
+	//$$ 	g.drawString(this.font, "Shortcut Key", px + 8, py + 48 + 6, 0xFFFFFFFF, true);
+	//$$ 	g.drawString(this.font, "Links", px + 8, py + 74, 0xFFAAAAAA, true);
+	//$$ 	g.fill(px + 8, py + 84, px + pw - 8, py + 85, 0x55FFFFFF);
+	//$$ 	g.drawString(this.font, "Modrinth Page", px + 8, py + 90 + 6, 0xFFFFFFFF, true);
+	//$$ }
 	//#elseif MC >= 12102
 	//$$ // In 1.21.2+, overriding renderBackground avoids double-blur while drawing under widgets.
 	//$$ @Override
