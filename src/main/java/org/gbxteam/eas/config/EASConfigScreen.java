@@ -145,7 +145,6 @@ public class EASConfigScreen extends Screen
 	//$$ @Override
 	//$$ public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor g, int mx, int my, float delta)
 	//$$ {
-	//$$ 	super.extractRenderState(g, mx, my, delta);
 	//$$ 	int pw = 240;
 	//$$ 	int px = (this.width - pw) / 2;
 	//$$ 	int py = this.height / 2 - 60;
@@ -182,6 +181,7 @@ public class EASConfigScreen extends Screen
 	//$$ 			draw.invoke(g, this.font, "Modrinth Page", px + 8, py + 90 + 6, 0xFFFFFFFF);
 	//$$ 		}
 	//$$ 	} catch (Exception ignored) {}
+	//$$ 	super.extractRenderState(g, mx, my, delta);
 	//$$ }
 	//#elseif MC >= 12102
 	//$$ // In 1.21.2+, overriding renderBackground avoids double-blur while drawing under widgets.
