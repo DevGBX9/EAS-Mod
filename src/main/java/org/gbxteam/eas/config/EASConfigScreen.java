@@ -1,7 +1,9 @@
 package org.gbxteam.eas.config;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.vertex.PoseStack;
+//#if MC >= 11600
+//$$ import com.mojang.blaze3d.vertex.PoseStack;
+//#endif
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import org.gbxteam.eas.EASConfig;
