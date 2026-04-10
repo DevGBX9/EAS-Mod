@@ -59,7 +59,20 @@ public class EASConfigScreen extends Screen
 		//#if MC >= 11900
 		//$$ return InputConstants.Type.KEYSYM.getOrCreate(this.tempKey).getDisplayName().getString();
 		//#else
-		return InputConstants.Type.KEYSYM.getOrCreate(this.tempKey).getName();
+		String keyName = org.lwjgl.glfw.GLFW.glfwGetKeyName(this.tempKey, 0);
+		if (keyName != null && !keyName.isEmpty()) {
+			return keyName.toUpperCase();
+		}
+		
+		String name = InputConstants.Type.KEYSYM.getOrCreate(this.tempKey).getName();
+		if (name != null) {
+			if (name.startsWith("key.keyboard.")) name = name.substring(13);
+			else if (name.startsWith("key.mouse.")) name = "Mouse " + name.substring(10);
+			name = name.replace(".", " ");
+			if (name.length() == 1) return name.toUpperCase();
+			return name.substring(0, 1).toUpperCase() + name.substring(1);
+		}
+		return "UNKNOWN";
 		//#endif
 	}
 
@@ -71,14 +84,9 @@ public class EASConfigScreen extends Screen
 	private void openUrl(String url)
 	{
 		try {
-			Class<?> utilClass = Class.forName("net.minecraft.Util");
-			Object os;
-			try { os = utilClass.getMethod("getPlatform").invoke(null); }
-			catch (Exception e) { os = utilClass.getMethod("getOperatingSystem").invoke(null); }
-			try { os.getClass().getMethod("openUri", java.net.URI.class).invoke(os, java.net.URI.create(url)); }
-			catch (Exception e) { os.getClass().getMethod("openUri", String.class).invoke(os, url); }
+			java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
 		} catch (Exception e) {
-			try { java.awt.Desktop.getDesktop().browse(java.net.URI.create(url)); } catch (Exception ignored) {}
+			org.gbxteam.eas.EssentialAutoSprint.LOGGER.error("Could not open URL: " + e.getMessage());
 		}
 	}
 
