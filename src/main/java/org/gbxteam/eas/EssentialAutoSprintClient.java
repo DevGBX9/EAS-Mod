@@ -27,10 +27,20 @@ import net.fabricmc.api.Environment;
 @Environment(EnvType.CLIENT)
 public class EssentialAutoSprintClient implements ClientModInitializer
 {
+	public static net.minecraft.client.KeyMapping toggleKeyMapping;
+
 	@Override
 	public void onInitializeClient()
 	{
 		EASConfig.load();
+		
+		int initialKey = EASConfig.INSTANCE.toggleKey != 0 ? EASConfig.INSTANCE.toggleKey : org.lwjgl.glfw.GLFW.GLFW_KEY_H;
+
+		//#if MC >= 11600
+		//$$ toggleKeyMapping = new net.minecraft.client.KeyMapping("Auto Sprint (EAS)", com.mojang.blaze3d.platform.InputConstants.Type.KEYSYM, initialKey, "key.categories.movement");
+		//#else
+		toggleKeyMapping = new net.minecraft.client.KeyMapping("Auto Sprint (EAS)", initialKey, "key.categories.movement");
+		//#endif
 		EssentialAutoSprint.LOGGER.info("[EAS] Client initialized — Auto Sprint ready.");
 	}
 }

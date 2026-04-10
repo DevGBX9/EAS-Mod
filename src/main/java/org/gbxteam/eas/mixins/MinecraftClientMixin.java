@@ -43,12 +43,37 @@ import net.minecraft.network.chat.TextComponent;
 @Mixin(Minecraft.class)
 public abstract class MinecraftClientMixin
 {
+	private boolean eas$initializedKeys = false;
 	private boolean eas$lastKeyState = false;
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	private void eas_onTick(CallbackInfo ci)
 	{
 		Minecraft mc = (Minecraft) (Object) this;
+
+		if (!eas$initializedKeys && mc.options != null) {
+			eas$initializedKeys = true;
+			try {
+				for (java.lang.reflect.Field f : mc.options.getClass().getFields()) {
+					if (f.getType().isArray() && f.getType().getComponentType() == net.minecraft.client.KeyMapping.class) {
+						net.minecraft.client.KeyMapping[] old = (net.minecraft.client.KeyMapping[]) f.get(mc.options);
+						boolean exists = false;
+						for (net.minecraft.client.KeyMapping k : old) {
+							if (k == org.gbxteam.eas.EssentialAutoSprintClient.toggleKeyMapping) exists = true;
+						}
+						if (!exists && org.gbxteam.eas.EssentialAutoSprintClient.toggleKeyMapping != null) {
+							net.minecraft.client.KeyMapping[] newMappings = new net.minecraft.client.KeyMapping[old.length + 1];
+							System.arraycopy(old, 0, newMappings, 0, old.length);
+							newMappings[old.length] = org.gbxteam.eas.EssentialAutoSprintClient.toggleKeyMapping;
+							f.set(mc.options, newMappings);
+						}
+						break;
+					}
+				}
+			} catch (Exception e) {
+				org.gbxteam.eas.EssentialAutoSprint.LOGGER.error("[EAS] Failed to inject vanilla keybinding:", e);
+			}
+		}
 
 		if (mc.player == null || mc.screen != null) return;
 
@@ -60,8 +85,15 @@ public abstract class MinecraftClientMixin
 		//#endif
 
 		boolean currentKeyDown = GLFW.glfwGetKey(windowHandle, EASConfig.INSTANCE.toggleKey) == GLFW.GLFW_PRESS;
+		
+		boolean keyMappingPressed = false;
+		if (org.gbxteam.eas.EssentialAutoSprintClient.toggleKeyMapping != null) {
+			while (org.gbxteam.eas.EssentialAutoSprintClient.toggleKeyMapping.consumeClick()) {
+				keyMappingPressed = true;
+			}
+		}
 
-		if (currentKeyDown && !eas$lastKeyState)
+		if ((currentKeyDown && !eas$lastKeyState) || keyMappingPressed)
 		{
 			EASConfig.INSTANCE.enabled = !EASConfig.INSTANCE.enabled;
 			EASConfig.INSTANCE.save();

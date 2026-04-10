@@ -150,9 +150,21 @@ public class EASConfigScreen extends Screen
 				this.minecraft.setScreen(new EASConfigScreen(this.parent, this.tempEnabled, this.tempKey, this.isDirty));
 			return true;
 		}
+		//#if MC >= 11400 && MC < 11500
+		//$$ if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
+		//$$ 	this.minecraft.setScreen(this.parent);
+		//$$ 	return true;
+		//$$ }
+		//#endif
 		return super.keyPressed(keyCode, scanCode, modifiers);
 	}
 	//#endif
+	
+	@Override
+	public void onClose()
+	{
+		this.minecraft.setScreen(this.parent);
+	}
 
 	// ─── Render ───────────────────────────────────────────────────────────────
 
