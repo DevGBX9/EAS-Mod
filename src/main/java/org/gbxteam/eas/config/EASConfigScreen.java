@@ -368,7 +368,7 @@ public class EASConfigScreen extends Screen
 		//#elseif MC >= 11700
 		//$$ this.addRenderableWidget(new Button(x, y, w, h, new TextComponent(label), action));
 		//#elseif MC >= 11600
-		//$$ this.addWidget(new Button(x, y, w, h, new TextComponent(label), action));
+		//$$ this.addButton(new Button(x, y, w, h, new TextComponent(label), action));
 		//#else
 		this.addButton(new Button(x, y, w, h, label, action));
 		//#endif
